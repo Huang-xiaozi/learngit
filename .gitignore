@@ -6,4 +6,6 @@ temp/file1.txt
 temp/file2.txt
 temp/package-list
 temp/script.js
+
 temp/stylesheet.css
+*.bak
