@@ -14,24 +14,27 @@ typedef struct person{
 int TransInTxt(void *MemoryBlock){
 	FILE *fp;
 	if((fp=fopen("person.txt","r")) == NULL){
-		printf("不能打开文件 ，按任意键退出 ！");
-		getch();
-		exit(1);
+		printf("不能打开文件  ！\n");
+		// getch();
+		// exit(1);
+		return(0);
 	}
 
 	int i=0;
 	int temp=0,temp1=0;
 	int CheckTheData=0;
 	person *index=(person *)MemoryBlock;
-	if(feof(fp)){
+
+	char CheckTheTxt;
+	CheckTheTxt=fgetc(fp);
+	if(CheckTheTxt==EOF){    
 		printf("the txt is empty!!\n");
 		return(2);
-	}	
-
-
+	}
+	rewind(fp);
 	fscanf(fp,"%s %d\n",index[i].name,&index[i].num);
 	index[i].father=NULL;
-	for(int j=0;j<10;j++,index[i].son[j]=NULL){;}
+	for(int k=0;k<10;k++){index[i].son[k]=NULL;}
 	CheckTheData=index[i].num;
 
 	while(!feof(fp)){
@@ -43,11 +46,12 @@ int TransInTxt(void *MemoryBlock){
 			}
 			fscanf(fp,"%s %d\n",index[i+temp+temp1+1].name,&index[i+temp+temp1+1].num);
 			index[i+temp+temp1+1].father=&index[i];
-			for(int j=0;j<10;j++,index[i+temp+temp1+1].son[j]=NULL){;}
+			for(int j=0;j<10;j++){index[i+temp+temp1+1].son[j]=NULL;}
 			CheckTheData=CheckTheData+index[i+temp+temp1+1].num-1;    // check the son's num 
 			for(int s=0;s<10;s++){
-				if(index[i].son[s]!=NULL){
+				if(index[i].son[s]==NULL){
 					index[i].son[s]=&index[i+temp+temp1+1];
+					break;
 				}
 			}
 		}
@@ -73,7 +77,7 @@ int TransOutTxt(person *root){
 		getch();
 		exit(1);
 	}
-	if(root=NULL){
+	if(root==NULL){
 		printf("this is a txt with no data!\n");
 		return(2);
 	}
@@ -101,6 +105,25 @@ int  TransOutTxtRecursion(FILE *fp,person *father){
 	return(1);
 }
 void main(){
+
+	person tree[100];
+	person *root;
+	int OpenStatus=-1;
+	OpenStatus=TransInTxt(tree);
+	switch(OpenStatus){
+		case -1: printf("the program's function isn't returned with worth value!\n");
+				 printf("按任意键退出 ！\n"); 
+				 getch();
+				 exit(1);
+		case 0:  printf("the txt isn't exist!!\n");
+				 break;
+	    case 1: root=tree;
+	    		TransOutTxt(root);
+	    		printf("flag\n");
+	    		break;
+	    case 2:  printf("the txt is empty!!\n");
+	            break;
+	}
 
 
 }
